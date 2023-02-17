@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>P1 Tasks</title>
+    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <h1>P1 Task for today</h1>
+    <form>
+      <label for="task-input">New Task:</label>
+      <input type="text" id="task-input" name="task-input" />
+      <span class="material-symbols-outlined" id="add-button">
+        add_circle
+      </span>
+
+      <span
+        class="material-symbols-outlined"
+        onclick="clearList()"
+        id="clear-button"
+      >
+        clear_all
+      </span>
+    </form>
+    <ul id="task-list"></ul>
+
+    <script>
+      // Get the form and input elements
+      const form = document.querySelector("form");
+      const taskInput = document.getElementById("task-input");
+
+      // Get the task list element
+      const taskList = document.getElementById("task-list");
+
+      // Get the tasks from local storage or create an empty array
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+      // Function to create a new list item
+      function createListItem(taskText, index) {
+        // Create a new list item
+        const li = document.createElement("li");
+        li.textContent = taskText;
+        const buttonDiv = document.createElement("div");
+
+        // Add a delete button to the list item
+        const deleteButton = document.createElement("span");
+        deleteButton.className += "material-symbols-outlined";
+        deleteButton.textContent = "delete";
+        buttonDiv.appendChild(deleteButton);
+
+        // Add an edit button to the list item
+        const editButton = document.createElement("span");
+        editButton.className += "material-symbols-outlined";
+        editButton.textContent = "edit";
+        buttonDiv.appendChild(editButton);
+
+        // Add event listeners to the delete and edit buttons
+        deleteButton.addEventListener("click", () => {
+          li.remove();
+          // Remove the task from the tasks array and update local storage
+          tasks.splice(index, 1);
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+        });
+        editButton.addEventListener("click", () => {
+          const newTaskText = prompt("Enter the new task text:", taskText);
+          if (newTaskText !== null) {
+            li.textContent = newTaskText;
+            // Update the task in the tasks array and update local storage
+            tasks[index] = newTaskText;
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+          }
+        });
+
+        li.appendChild(buttonDiv);
+        return li;
+      }
+
+      // Function to render the task list
+      function renderTaskList() {
+        // Clear the task list
+        taskList.innerHTML = "";
+
+        // Loop through the tasks and add them to the task list
+        tasks.forEach((task, index) => {
+          const li = createListItem(task, index);
+          taskList.appendChild(li);
+        });
+      }
+
+      function clearList() {
+        // Clear the task list
+        taskList.innerHTML = "";
+
+        // Clear the tasks array and update local storage
+        tasks = [];
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+      }
+
+      // Add an event listener to the form's submit button
+      const addButton = document.getElementById("add-button");
+      addButton.addEventListener("click", (event) => {
+        // Prevent the form from submitting
+        event.preventDefault();
+
+        // Get the input value
+        const taskText = taskInput.value.trim();
+
+        if (taskText !== "") {
+          // Add the task to the tasks array and update local storage
+          tasks.push(taskText);
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+
+          // Create a new list item and add it to the task list
+          const li = createListItem(taskText, tasks.length - 1);
+          taskList.appendChild(li);
+
+          // Clear the input field
+          taskInput.value = "";
+        }
+      });
+
+      // Render the task list on page load
+      renderTaskList();
+    </script>
+  </body>
+</html>
