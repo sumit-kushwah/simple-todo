@@ -15,8 +15,8 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
   </head>
   <body>
     <h1>P1 Task for today</h1>
@@ -26,7 +26,6 @@
       <span class="material-symbols-outlined" id="add-button">
         add_circle
       </span>
-
       <span
         class="material-symbols-outlined"
         onclick="clearList()"
@@ -109,14 +108,16 @@
         localStorage.setItem("tasks", JSON.stringify(tasks));
       }
 
-      // Add an event listener to the form's submit button
-      const addButton = document.getElementById("add-button");
-      addButton.addEventListener("click", (event) => {
+      form.addEventListener('submit', (event) => {
+        addTask(taskInput.value.trim());
+      });
+
+      function addTask(text) {
         // Prevent the form from submitting
         event.preventDefault();
 
         // Get the input value
-        const taskText = taskInput.value.trim();
+        const taskText = text;
 
         if (taskText !== "") {
           // Add the task to the tasks array and update local storage
@@ -130,6 +131,12 @@
           // Clear the input field
           taskInput.value = "";
         }
+      }
+
+      // Add an event listener to the form's submit button
+      const addButton = document.getElementById("add-button");
+      addButton.addEventListener("click", (event) => {
+        addTask(taskInput.value.trim());
       });
 
       // Render the task list on page load
